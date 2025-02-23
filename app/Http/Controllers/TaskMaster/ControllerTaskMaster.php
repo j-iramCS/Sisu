@@ -32,6 +32,7 @@ class ControllerTaskMaster extends Controller
         $arrMonths = $this->getBlocksMonths(2025);
         $arrMonths = $arrMonths['arrMonths'];
 
+
         return Inertia::render('Taskmaster/Index', [
             'cat_utrs' => $cat_utrs,
             'cat_actividades' => $cat_actividades,
@@ -151,8 +152,8 @@ class ControllerTaskMaster extends Controller
     // Private functions
     private function getActivities()
     {
-        $maxMonth = $this->getBlocksMonths(2025);
-        $maxMonth = $maxMonth['maxMonth'];
+        // $maxMonth = $this->getBlocksMonths(2025);
+        // $maxMonth = $maxMonth['maxMonth'];
 
         $activities = actividades::from('actividades as A')
             ->join('cat_utrs as B', 'A.utr_id', '=', 'B.id')
@@ -168,7 +169,8 @@ class ControllerTaskMaster extends Controller
                 'A.descripcion',
                 'A.numero_horas',
                 'A.cadena',
-                'A.repetible'
+                'A.repetible',
+                'A.actividad_id'
             )
             ->where('A.created_by', Auth::user()->id)
             ->get();
@@ -183,6 +185,8 @@ class ControllerTaskMaster extends Controller
             $activity->plazoFinalMes = $plazoFinal->month;     // Mes del plazo final
             $activity->plazoFinalDia = $plazoFinal->day;       // Día del plazo final
 
+            $activity->maxBlocks = $this->getBlocksMonths(2025, $activity->actividad_id, $activity->id_utr)['maxMonth'];
+
             return $activity;
         });
 
@@ -192,10 +196,10 @@ class ControllerTaskMaster extends Controller
         });
 
 
-        function datoYaExiste($array, $id, $mes, $bloque)
+        function datoYaExiste($array, $id, $mes, $bloque, $utrId)
         {
             foreach ($array as $item) {
-                if ($item['id'] == $id && $item['mes'] == $mes && $item['bloque'] == $bloque) {
+                if ($item['id'] == $id && $item['mes'] == $mes && $item['bloque'] == $bloque && $item['utrId'] == $utrId) {
                     return true; // El dato ya existe
                 }
             }
@@ -206,44 +210,18 @@ class ControllerTaskMaster extends Controller
 
         foreach ($activitiesGrouped as $utrName => $activities) { // Recorrer las UTRs
             foreach ($activities as $activityName => $activityList) { // Recorrer las actividades
-
-                // dd($activityList);
+                $maxBlock = $activityList[0]->maxBlocks;
 
                 foreach ($activityList as $activity) { // Recorrer las actividades
                     for ($mes = $activity->plazoInicialMes; $mes <= $activity->plazoFinalMes; $mes++) { // Recorrer los meses que abarca la actividad
-                        // 1 actividad con inicio 3 final 4
-                        // 2 actividad con inicio 3 final 5
-                        // 3 actividad con inicio 4 final 6
-                        // 4 actividad con inicio 1 final 3
-                        for ($b = 1; $b <= $maxMonth; $b++) { // Recorrer los bloques que hay
-                            if (!datoYaExiste($array_bloques_asignados, $activity->id_actividad, $mes, $b)) {
-                                // actid 1: mes 3 bloque 1 -> add 
-                                // actid 1: mes 4 bloque 1 -> add 
-
-                                // actid 2: mes 3 bloque 1 -> Ya existe
-                                // actid 2: mes 3 bloque 2 -> add
-                                // actid 2: mes 4 bloque 1 -> Ya existe
-                                // actid 2: mes 4 bloque 2 -> add
-                                // actid 2: mes 5 bloque 1 -> add
-
-                                // actid 3: mes 4 bloque 1 -> Ya existe
-                                // actid 3: mes 4 bloque 2 -> Ya existe
-                                // actid 3: mes 4 bloque 3 -> add
-                                // actid 3: mes 5 bloque 1 -> Ya existe
-                                // actid 3: mes 5 bloque 2 -> add
-                                // actid 3: mes 6 bloque 1 -> add
-
-                                // actid 4: mes 1 bloque 1 -> add
-                                // actid 4: mes 2 bloque 1 -> add
-                                // actid 4: mes 3 bloque 1 -> Ya existe
-                                // actid 4: mes 3 bloque 2 -> Ya existe
-                                // actid 4: mes 3 bloque 3 -> add
-
+                        for ($b = 1; $b <= $maxBlock; $b++) { // Recorrer los bloques que hay
+                            if (!datoYaExiste($array_bloques_asignados, $activity->id_actividad, $mes, $b, $activity->id_utr)) {
                                 $array_bloques_asignados[] = [
                                     'id' => $activity->id_actividad,
                                     'actId' => $activity->id,
                                     'mes' => $mes,
-                                    'bloque' => $b
+                                    'bloque' => $b,
+                                    'utrId' => $activity->id_utr
                                 ];
                                 break;
                             }
@@ -267,8 +245,6 @@ class ControllerTaskMaster extends Controller
                 }
             }
         }
-
-        // $result = [];
 
         foreach ($array_bloques_asignados as $item) {
             $actId = $item['actId'];
@@ -299,7 +275,7 @@ class ControllerTaskMaster extends Controller
         return $activitiesGrouped;
     }
 
-    private function getBlocksMonths($yearValue)
+    private function getBlocksMonths($yearValue, $activityId = null, $urtId = null)
     {
         // Obtener el número máximo de bloques por mes
         $maxMonth = DB::table(DB::raw('(SELECT 1 AS mes UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION
@@ -311,6 +287,12 @@ class ControllerTaskMaster extends Controller
             })
             ->selectRaw('COUNT(actividades.id) AS bloques')
             ->where('actividades.created_by', Auth::user()->id)
+            ->when($activityId, function ($query, $activityId) {
+                return $query->where('actividades.actividad_id', $activityId);
+            })
+            ->when($urtId, function ($query, $urtId) {
+                return $query->where('actividades.utr_id', $urtId);
+            })
             ->groupBy('meses.mes')
             ->orderByDesc('bloques')
             ->get();

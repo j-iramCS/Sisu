@@ -137,20 +137,20 @@
                                         <tr v-for="(activity1, nombreActivity) in activities" :key="nombreActivity"
                                             class="hover:bg-gray-50 transition-all">
                                             <td
-                                                class="px-6 py-4 min-w-52 max-w-52 border-b border-gray-200 font-medium text-gray-700">
+                                                class="px-6 min-w-52 max-w-52 border-b border-gray-200 font-medium text-gray-700">
                                                 {{ nombreActivity }}
                                             </td>
                                             <template v-for="(month, index) in arrMonths" :key="index">
 
-                                                <td class="border-b border-gray-200 border-l align-top">
+                                                <td class="border-b border-gray-200 border-l align-top max-h-2 pt-[5px]">
 
-                                                    <div v-for="(block, index) in month.bloques" :key="index"
+                                                    <div v-for="(block, index) in activity1[0].maxBlocks" :key="index"
                                                         class="min-h-5 max-h-5 mb-1">
-                                                        <!-- {{ block.idblock }} -->
+                                                        <!-- {{ block }} -->
 
                                                         <template v-for="(activity2, index) in activity1" :key="index">
                                                             <!-- {{ activity2.id }} -->
-                                                            <template v-if="block.idblock == activity2.bloque">
+                                                            <template v-if="block == activity2.bloque">
                                                                 <button v-if="buttonsCondition(activity2, month)"
                                                                     @click="openModalActivity(activity2)"
                                                                     :id="'hoverAct-' + activity2.id"
