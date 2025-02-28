@@ -179,7 +179,7 @@
             </div>
 
 
-            <div class="container mx-auto p-4">
+            <div class="container mx-auto p-4 hidden">
                 <!-- Botones -->
                 <div class="flex gap-2 relative">
                     <button class="tab-button px-4 py-2 bg-blue-500 text-white rounded"

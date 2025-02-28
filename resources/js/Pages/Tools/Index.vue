@@ -7,12 +7,12 @@
         <!-- Sección de Sistemas -->
         <section class="max-w-7xl mx-auto px-6 py-16">
             <h2 class="text-4xl font-bold text-center mb-12 text-blue-900">Nuestros Sistemas</h2>
-            <p class="text-center text-lg text-gray-600 mb-12">Explora nuestras soluciones tecnológicas diseñadas para
+            <p class="text-center text-lg text-gray-600 mb-12 hidden">Explora nuestras soluciones tecnológicas diseñadas para
                 optimizar y mejorar tus procesos. Tenemos opciones gratuitas y de pago para adaptarnos a tus
                 necesidades.</p>
 
             <!-- Filtros -->
-            <div class="flex justify-center space-x-4 mb-12">
+            <div class="flex justify-center space-x-4 mb-12 hidden">
                 <button
                     class="bg-blue-900 text-white px-6 py-2 rounded-full hover:bg-blue-800 transition-colors duration-300">Todos</button>
                 <button
@@ -39,7 +39,7 @@
 
                 <!-- Sistema 1: Gestión de Recursos Humanos -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-blue-600 text-5xl mb-4">
                         <Icon icon="ic:baseline-people" />
                     </div>
@@ -51,7 +51,7 @@
 
                 <!-- Sistema 2: Gestión de Inventarios -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-purple-600 text-5xl mb-4">
                         <Icon icon="ic:outline-inventory" />
                     </div>
@@ -63,7 +63,7 @@
 
                 <!-- Sistema 3: Gestión de Proyectos -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-yellow-400 text-5xl mb-4">
                         <Icon icon="ic:baseline-assignment" />
                     </div>
@@ -75,7 +75,7 @@
 
                 <!-- Sistema 4: Gestión de Clientes (CRM) -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-blue-600 text-5xl mb-4">
                         <Icon icon="ic:baseline-people" />
                     </div>
@@ -87,7 +87,7 @@
 
                 <!-- Sistema 5: Gestión Financiera -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-purple-600 text-5xl mb-4">
                         <Icon icon="ic:baseline-account-balance" />
                     </div>
@@ -99,7 +99,7 @@
 
                 <!-- Sistema 6: Gestión de Compras -->
                 <div
-                    class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-105 hover:transition-all">
+                    class="bg-gray-100 p-8 rounded-lg shadow-lg transition-shadow duration-300 opacity-50 pointer-events-none">
                     <div class="text-yellow-400 text-5xl mb-4">
                         <Icon icon="ic:outline-shopping-cart" />
                     </div>

@@ -4,7 +4,7 @@
         <!-- Título -->
         <div class="p-4 border-b border-gray-800">
             <div class="flex items-center justify-center">
-                <h3 class="text-xl font-bold">S<span class="text-yellow-400">OK</span></h3>
+                <h3 class="text-xl font-bold">SI<span class="text-yellow-400">NA</span></h3>
             </div>
         </div>
 
