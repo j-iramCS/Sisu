@@ -273,24 +273,45 @@ class ControllerTaskMaster extends Controller
     private function getBlocksMonths($yearValue, $activityId = null, $urtId = null)
     {
         // Obtener el número máximo de bloques por mes
-        $maxMonth = DB::table(DB::raw('(SELECT 1 AS mes UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION
-        SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS meses'))
-            ->leftJoin('actividades', function ($join) use ($yearValue) {
-                $join->on(DB::raw('meses.mes'), '>=', DB::raw('MONTH(actividades.plazo_inicial)'))
-                    ->on(DB::raw('meses.mes'), '<=', DB::raw('MONTH(actividades.plazo_final)'))
-                    ->whereYear('actividades.plazo_inicial', $yearValue); // Filtra por año
-            })
-            ->selectRaw('COUNT(actividades.id) AS bloques')
-            ->where('actividades.created_by', Auth::user()->id)
-            ->when($activityId, function ($query, $activityId) {
-                return $query->where('actividades.actividad_id', $activityId);
-            })
-            ->when($urtId, function ($query, $urtId) {
-                return $query->where('actividades.utr_id', $urtId);
-            })
-            ->groupBy('meses.mes')
-            ->orderByDesc('bloques')
-            ->get();
+        try {
+            $maxMonth = DB::table(DB::raw('(SELECT 1 AS mes UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION
+            SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS meses'))
+                ->leftJoin('actividades', function ($join) use ($yearValue) {
+                    $join->on(DB::raw('meses.mes'), '>=', DB::raw('MONTH(actividades.plazo_inicial)'))
+                        ->on(DB::raw('meses.mes'), '<=', DB::raw('MONTH(actividades.plazo_final)'))
+                        ->whereYear('actividades.plazo_inicial', $yearValue); // Filtra por año
+                })
+                ->selectRaw('COUNT(actividades.id) AS bloques')
+                ->where('actividades.created_by', Auth::user()->id)
+                ->when($activityId, function ($query, $activityId) {
+                    return $query->where('actividades.actividad_id', $activityId);
+                })
+                ->when($urtId, function ($query, $urtId) {
+                    return $query->where('actividades.utr_id', $urtId);
+                })
+                ->groupBy('meses.mes')
+                ->orderByDesc('bloques')
+                ->get();
+        } catch (\Throwable $th) {
+            $maxMonth = DB::table(DB::raw('(SELECT 1 AS mes UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION SELECT 6 UNION
+            SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12) AS meses'))
+                ->leftJoin('actividades', function ($join) use ($yearValue) {
+                    $join->on(DB::raw('meses.mes'), '>=', DB::raw('EXTRACT(MONTH FROM actividades.plazo_inicial)'))
+                        ->on(DB::raw('meses.mes'), '<=', DB::raw('EXTRACT(MONTH FROM actividades.plazo_final)'))
+                        ->whereYear('actividades.plazo_inicial', $yearValue); // Filtra por año
+                })
+                ->selectRaw('COUNT(actividades.id) AS bloques')
+                ->where('actividades.created_by', Auth::user()->id)
+                ->when($activityId, function ($query, $activityId) {
+                    return $query->where('actividades.actividad_id', $activityId);
+                })
+                ->when($urtId, function ($query, $urtId) {
+                    return $query->where('actividades.utr_id', $urtId);
+                })
+                ->groupBy('meses.mes')
+                ->orderByDesc('bloques')
+                ->get();
+        }
 
         $maxMonth = $maxMonth->max('bloques');
 
