@@ -144,11 +144,6 @@ class ControllerTaskMaster extends Controller
         //
     }
 
-    public function prueba()
-    {
-        return Inertia::render('Taskmaster/Prueba');
-    }
-
     // Private functions
     private function getActivities()
     {

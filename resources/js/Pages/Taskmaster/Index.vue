@@ -30,10 +30,31 @@
 <template>
     <Aside />
 
-    <main class="md:ml-64 p-6">
+    <main class="flex-1 ml-16 p-6">
         <div class="max-w-7xl mx-auto">
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-3"> <!-- Boxes -->
+
+
+            <!-- Banner -->
+            <div
+                class="w-full mb-5 h-64 flex flex-col md:flex-row items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-lg overflow-hidden">
+                <div class="w-full md:w-1/3 p-8 text-center md:text-left">
+                    <h2
+                        class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+                        ¡Crear una Actividad!
+                    </h2>
+                    <p class="mt-4 text-gray-600">
+                        Explora nuestras nuevas actividades y vive experiencias únicas que te inspirarán.
+                    </p>
+                    <PrimaryButton @click="openModal" class="mt-6">Nueva Actividad</PrimaryButton>
+                </div>
+                <div class="w-full md:w-2/3 h-64 md:h-auto overflow-hidden">
+                    <img src="/images/banner.webp" alt="Banner Image"
+                        class="w-full h-full object-cover transform transition-all hover:scale-110" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"> <!-- Boxes -->
                 <!-- Cuadro 1 -->
                 <div class="col-span-1 mb-4">
                     <div class="bg-white rounded-lg shadow-md p-4">
@@ -85,33 +106,14 @@
 
             </div>
 
-
-            <!-- Banner -->
-            <div
-                class="w-full h-72 flex flex-col md:flex-row items-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl shadow-2xl overflow-hidden">
-                <div class="w-full md:w-1/3 p-8 text-center md:text-left">
-                    <h2
-                        class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                        ¡Crear una Actividad!
-                    </h2>
-                    <p class="mt-4 text-gray-600">
-                        Explora nuestras nuevas actividades y vive experiencias únicas que te inspirarán.
-                    </p>
-                    <PrimaryButton @click="openModal" class="mt-6">Nueva Actividad</PrimaryButton>
-                </div>
-                <div class="w-full md:w-2/3 h-64 md:h-auto overflow-hidden">
-                    <img src="/images/banner.webp" alt="Banner Image"
-                        class="w-full h-full object-cover transform transition-all hover:scale-110" />
-                </div>
-            </div>
-            <div v-if="activitiesGrouped.length != 0" class="flex gap-2 items-center">
-                <PrimaryButton @click="randAct" class="mt-6">Act random</PrimaryButton>
-                <PrimaryButton class="mt-6 bg-orange-500 hover:bg-orange-600">Asignar Actividades</PrimaryButton>
-                <PrimaryButton class="mt-6 bg-green-500 hover:bg-green-600">Excel</PrimaryButton>
+            <div v-if="activitiesGrouped.length != 0" class="flex gap-2 items-center mb-5 mt-1">
+                <PrimaryButton @click="randAct" class="">Act random</PrimaryButton>
+                <PrimaryButton class="bg-orange-500 hover:bg-orange-600">Asignar Actividades</PrimaryButton>
+                <PrimaryButton class="bg-green-500 hover:bg-green-600">Excel</PrimaryButton>
             </div>
 
             <div
-                class="overflow-x-auto rounded-lg shadow-lg mt-6 scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100 mb-72">
+                class="overflow-x-auto rounded-lg shadow-lg scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-blue-100 mb-72">
                 <table class="min-w-full bg-white rounded-lg overflow-hidden">
                     <thead>
                         <tr v-for="(activities, nombreUtr) in activitiesGrouped" :key="nombreUtr">
@@ -142,7 +144,8 @@
                                             </td>
                                             <template v-for="(month, index) in arrMonths" :key="index">
 
-                                                <td class="border-b border-gray-200 border-l align-top max-h-2 pt-[5px]">
+                                                <td
+                                                    class="border-b border-gray-200 border-l align-top max-h-2 pt-[5px]">
 
                                                     <div v-for="(block, index) in activity1[0].maxBlocks" :key="index"
                                                         class="min-h-5 max-h-5 mb-1">
@@ -174,6 +177,57 @@
                     </thead>
                 </table>
             </div>
+
+
+            <div class="container mx-auto p-4">
+                <!-- Botones -->
+                <div class="flex gap-2 relative">
+                    <button class="tab-button px-4 py-2 bg-blue-500 text-white rounded"
+                        :class="{ 'bg-blue-700': activeTab === 'tab1' }" @click="activeTab = 'tab1'">
+                        Botón 1
+                    </button>
+                    <button class="tab-button px-4 py-2 bg-blue-500 text-white rounded"
+                        :class="{ 'bg-blue-700': activeTab === 'tab2' }" @click="activeTab = 'tab2'">
+                        Botón 2
+                    </button>
+                    <button class="tab-button px-4 py-2 bg-blue-500 text-white rounded"
+                        :class="{ 'bg-blue-700': activeTab === 'tab3' }" @click="activeTab = 'tab3'">
+                        Botón 3
+                    </button>
+                    <br>
+                    <!-- Línea debajo de los botones -->
+                    <div class="absolute bottom-0 left-0 h-1 bg-blue-700 transition-all duration-300 ease-in-out"
+                        :class="{
+                            'translate-x-0': activeTab === 'tab1',
+                            'translate-x-full': activeTab === 'tab2',
+                            'translate-x-[200%]': activeTab === 'tab3',
+                        }" style="width: 33.33%;"></div>
+                </div>
+
+                <!-- Vistas -->
+                <div class="">
+                    <div class="p-4 transition-opacity duration-300" :class="{
+                        'opacity-100 block': activeTab === 'tab1',
+                        'opacity-0 hidden': activeTab !== 'tab1',
+                    }" style="background-color: #f3f4f6;">
+                        Vista 1
+                    </div>
+                    <div class="p-4 transition-opacity duration-300" :class="{
+                        'opacity-100 block': activeTab === 'tab2',
+                        'opacity-0 hidden': activeTab !== 'tab2',
+                    }" style="background-color: #e5e7eb;">
+                        Vista 2
+                    </div>
+                    <div class="p-4 transition-opacity duration-300" :class="{
+                        'opacity-100 block': activeTab === 'tab3',
+                        'opacity-0 hidden': activeTab !== 'tab3',
+                    }" style="background-color: #d1d5db;">
+                        Vista 3
+                    </div>
+                </div>
+            </div>
+
+
 
             <!-- Modal's -->
             <Modal :show="isModalVisible" maxWidth="2xl" @close="closeModal"> <!-- Modal Crear Actividad -->
@@ -471,4 +525,5 @@ function getDisplayText(activity2: any, month: any): string {
     return '';
 }
 
+const activeTab = ref('tab1');
 </script>
